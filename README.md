@@ -1,2 +1,411 @@
-# Fashion-MNIST-Image-Classification-using-Convolutional-Neural-Network
-MNIST Fashion Dataset and a classifier to classify fashion clothing into categories.
+# Fashion-MNIST Image Classification using Convolutional Neural Network
+
+## 📌 Project Overview
+
+This project implements a **Convolutional Neural Network (CNN)** to classify fashion clothing images into different categories using the **Fashion-MNIST dataset**.
+
+The dataset contains grayscale images of clothing and fashion items. The CNN learns visual patterns from the images and classifies each image into one of **10 fashion categories**.
+
+---
+
+## 🎯 Objective
+
+To build a CNN-based classifier that can classify Fashion-MNIST images into their respective clothing categories.
+
+---
+
+## 📂 Dataset
+
+The project uses the **Fashion-MNIST training dataset** stored as:
+
+```text
+fashion-mnist_train.csv
+```
+
+Each image has a resolution of:
+
+```text
+28 × 28 pixels
+```
+
+The dataset contains:
+
+* **60,000 images**
+* **784 pixel features** per image
+* **1 label column**
+
+The pixel values range from **0 to 255**.
+
+### Fashion Categories
+
+| Label | Category      |
+| ----: | ------------- |
+|     0 | T-shirt / Top |
+|     1 | Trouser       |
+|     2 | Pullover      |
+|     3 | Dress         |
+|     4 | Coat          |
+|     5 | Sandal        |
+|     6 | Shirt         |
+|     7 | Sneaker       |
+|     8 | Bag           |
+|     9 | Ankle Boot    |
+
+---
+
+## 🛠 Technologies Used
+
+* Python
+* NumPy
+* Pandas
+* TensorFlow
+* Keras
+* Scikit-learn
+* Matplotlib
+* Google Colab
+
+---
+
+## 📁 Project Structure
+
+```text
+Fashion-MNIST-Classification/
+│
+├── fashion.ipynb
+├── fashion-mnist_train.csv
+└──  README.md
+```
+
+---
+
+## ⚙️ Implementation Steps
+
+### 1. Read the Dataset
+
+The Fashion-MNIST CSV dataset is loaded using Pandas.
+
+```python
+df = pd.read_csv("fashion-mnist_train.csv")
+```
+
+The first column contains the class label, while the remaining columns contain pixel values.
+
+---
+
+### 2. Separate Features and Target
+
+The dataset is divided into input features and target labels.
+
+```python
+x = df.iloc[:, 1:].values
+y = df.iloc[:, 0].values
+```
+
+* `x` → Pixel values
+* `y` → Clothing category labels
+
+---
+
+### 3. Normalize the Images
+
+Pixel values originally range from 0 to 255.
+
+They are normalized to the range 0 to 1:
+
+```python
+x = x / 255.0
+```
+
+Normalization helps the neural network train more effectively.
+
+---
+
+### 4. Reshape the Images
+
+The flattened 784-pixel vectors are reshaped into 28 × 28 grayscale images.
+
+```python
+x = x.reshape(-1, 28, 28, 1)
+```
+
+The final shape is:
+
+```text
+28 × 28 × 1
+```
+
+where `1` represents the grayscale channel.
+
+---
+
+### 5. Train-Test Split
+
+The dataset is divided into training and testing sets using an 80:20 ratio.
+
+```python
+x_train, x_test, y_train, y_test = train_test_split(
+    x, y,
+    test_size=0.2,
+    random_state=42
+)
+```
+
+```text
+80% → Training Data
+20% → Testing Data
+```
+
+---
+
+## 🧠 CNN Model Architecture
+
+The project uses a Convolutional Neural Network consisting of convolution, pooling, and dense layers.
+
+```text
+Input Image
+28 × 28 × 1
+      │
+      ▼
+Conv2D
+32 Filters
+3 × 3
+ReLU
+      │
+      ▼
+MaxPooling
+2 × 2
+      │
+      ▼
+Conv2D
+64 Filters
+3 × 3
+ReLU
+      │
+      ▼
+MaxPooling
+2 × 2
+      │
+      ▼
+Flatten
+      │
+      ▼
+Dense
+64 Neurons
+ReLU
+      │
+      ▼
+Dense
+10 Neurons
+Softmax
+      │
+      ▼
+Fashion Category
+```
+
+### Model Configuration
+
+| Layer        | Configuration         |
+| ------------ | --------------------- |
+| Conv2D       | 32 filters, 3×3, ReLU |
+| MaxPooling2D | 2×2                   |
+| Conv2D       | 64 filters, 3×3, ReLU |
+| MaxPooling2D | 2×2                   |
+| Flatten      | —                     |
+| Dense        | 64 neurons, ReLU      |
+| Output       | 10 neurons, Softmax   |
+
+---
+
+## ⚙️ Model Compilation
+
+The CNN is compiled using:
+
+* **Optimizer:** Adam
+* **Loss Function:** Sparse Categorical Crossentropy
+* **Metric:** Accuracy
+
+```python
+model.compile(
+    optimizer='adam',
+    loss='sparse_categorical_crossentropy',
+    metrics=['accuracy']
+)
+```
+
+Sparse categorical crossentropy is used because the target labels are integer class values from 0 to 9.
+
+---
+
+## 🏋️ Model Training
+
+The model is trained for **10 epochs**.
+
+```python
+model.fit(
+    x_train,
+    y_train,
+    epochs=10,
+    validation_split=0.2
+)
+```
+
+A validation split of 20% of the training data is used to monitor model performance during training.
+
+---
+
+## 📊 Model Evaluation
+
+After training, the model is evaluated using the test dataset.
+
+```python
+loss, accuracy = model.evaluate(x_test, y_test)
+
+print("Accuracy:", accuracy)
+```
+
+The main evaluation metric is **classification accuracy**.
+
+---
+
+## 📈 Results
+
+The final test accuracy is displayed after evaluating the trained CNN on the test dataset.
+
+```text
+Accuracy: <value generated by the notebook>
+```
+
+The exact accuracy depends on the training run and should be taken directly from the notebook output rather than assumed.
+
+---
+
+## 📚 Machine Learning Pipeline
+
+```text
+Fashion-MNIST Dataset
+        │
+        ▼
+    Read CSV
+        │
+        ▼
+Feature / Label Separation
+        │
+        ▼
+   Pixel Normalization
+        │
+        ▼
+   Reshape 28×28×1
+        │
+        ▼
+   Train-Test Split
+        │
+        ▼
+   Convolutional Layer
+        │
+        ▼
+   Max Pooling
+        │
+        ▼
+   Convolutional Layer
+        │
+        ▼
+   Max Pooling
+        │
+        ▼
+     Flatten
+        │
+        ▼
+   Dense Layer
+        │
+        ▼
+ Softmax Classification
+        │
+        ▼
+  Fashion Category
+        │
+        ▼
+  Accuracy Evaluation
+```
+
+---
+
+## 📌 Learning Outcomes
+
+* Image classification
+* Fashion-MNIST dataset handling
+* Image normalization
+* Image reshaping
+* Convolutional Neural Networks
+* Convolution layers
+* Max pooling
+* Flattening
+* Dense neural network layers
+* ReLU activation
+* Softmax classification
+* Sparse categorical crossentropy
+* Model training and evaluation
+
+---
+
+## ▶️ How to Run
+
+### 1. Open the Notebook
+
+Open:
+
+```text
+fashion.ipynb
+```
+
+using **Jupyter Notebook** or **Google Colab**.
+
+### 2. Add the Dataset
+
+Place:
+
+```text
+fashion-mnist_train.csv
+```
+
+in the required location and update the CSV path in the notebook if necessary.
+
+### 3. Run All Cells
+
+Run the cells sequentially to:
+
+1. Load the dataset
+2. Preprocess the images
+3. Split the data
+4. Build the CNN
+5. Train the model
+6. Evaluate classification accuracy
+
+---
+
+## 📦 Requirements
+
+```text
+numpy
+pandas
+matplotlib
+scikit-learn
+tensorflow
+keras
+jupyter
+```
+
+---
+
+## 👩‍💻 Author
+
+**Sukhada Tamboli**
+
+Interested in:
+
+* Data Science
+* Machine Learning
+* Deep Learning
+* Artificial Intelligence
+* Computer Vision
+* Python Development
+
