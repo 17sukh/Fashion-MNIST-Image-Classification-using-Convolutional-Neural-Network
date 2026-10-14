@@ -15,6 +15,7 @@ To build a CNN-based classifier that can classify Fashion-MNIST images into thei
 ---
 
 ## 📂 Dataset
+Download it: https://www.kaggle.com/datasets/thegeniusofntut/fashion-mnist-traincsv
 
 The project uses the **Fashion-MNIST training dataset** stored as:
 
